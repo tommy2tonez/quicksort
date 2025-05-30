@@ -1,5 +1,4 @@
 
-#include <atomic>
 #include <random>
 #include <memory>
 #include <functional>
@@ -23,8 +22,8 @@ auto timeit(Task task) -> size_t{
 
 int main(){
 
-
-    const size_t SZ = size_t{1} << 23;
+    const size_t SZ             = size_t{1} << 23;
+    const size_t SORTING_LENGTH = size_t{1} << 16;
 
     std::vector<uint32_t> vec1(SZ);
 
@@ -33,11 +32,20 @@ int main(){
     std::vector<uint32_t> vec2 = vec1;
 
     auto task1 = [&]{
-        std::sort(vec1.begin(), vec1.end());
+        size_t sort_sz = SZ / SORTING_LENGTH;
+
+        for (size_t i = 0u; i < sort_sz; ++i){
+            std::sort(std::next(vec1.begin(), SORTING_LENGTH * i), std::next(vec1.begin(), SORTING_LENGTH * (i  + 1)));
+        }
     };
 
     auto task2 = [&]{
-        dg::sort_variants::quicksort::quicksort(vec2.data(), std::next(vec2.data(), vec2.size()));
+        size_t sort_sz = SZ / SORTING_LENGTH;
+
+        for (size_t i = 0u; i < sort_sz; ++i){
+            // pdqsort(std::next(vec2.begin(), SORTING_LENGTH * i), std::next(vec2.begin(), SORTING_LENGTH * (i  + 1)));
+            dg::sort_variants::quicksort::quicksort(std::next(vec2.data(), SORTING_LENGTH * i), std::next(vec2.data(), SORTING_LENGTH * (i  + 1)));
+        }
     };
 
     std::cout << timeit(task1) << "<ms>" << "<std_qs>" << std::endl;

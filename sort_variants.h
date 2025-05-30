@@ -34,12 +34,9 @@
 
 namespace dg::sort_variants::quicksort{
 
-    static inline constexpr size_t BLOCK_PIVOT_MAX_LESS_SZ          = 8u;
     static inline constexpr size_t BLOCK_PIVOT_MAX_WALL_SZ          = 64u;
     static inline constexpr size_t MAX_RECURSION_DEPTH              = 64u; 
     static inline constexpr size_t COMPUTE_LEEWAY_MULTIPLIER        = 8u;
-    static inline constexpr size_t SMALL_QUICKSORT_SZ               = 7u;
-    static inline constexpr size_t ASC_SORTING_RATIO                = 4u;
 
     using qs_unsigned_bitset_t = uint64_t;
 
@@ -435,7 +432,14 @@ namespace dg::sort_variants::quicksort{
 
     //we are very proud of what people have recommended at 
     //https://llvm.org/devmtg/2023-02-25/slides/A-New-Implementation-for-std-sort.pdf
+    //https://github.com/minjaehwang/bitsetsort?tab=readme-ov-file
     //our good friends implementation is here: https://github.com/llvm/llvm-project/blob/main/libcxx/include/__algorithm/sort.h
+    //our friend implementation is VERY GOOD
+    //we'll move on for now, the implementation is good enough, we'll need to consider the merge sort for length of <= 32
+    //other than that, we are OK
+    //we can squeeze another 30% performance if we could get the <= 32 sort right
+    //we'll be back
+
     //we have made a further progress on the optimization (by re-branching + reimplementing insertion sort for arithmetic types)
     //we dont really have applications for the arithmetic sort except for our heap implementation which is a very crucial backbone of all things
     //for the first time, we can sort our heap segments 3 times faster without polluting CPUs (we have completed the assignment!!!)
